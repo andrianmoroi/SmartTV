@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rimraf -rf bin/",
-    "build": "npm run clean && tsc && cp -r public/ bin/",
+    "build": "npm run clean && tsc && cp -r public/ bin/ && cp -r node_modules/ bin/",
     "start": "npm run build && cd bin && node app.js"
   },
   "repository": {
