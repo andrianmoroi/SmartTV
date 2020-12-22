@@ -9,6 +9,7 @@ url = sys.argv[1]
 while True:
     try:
         print("started new process")
-        os.system("streamlink --player \"omxplayer -o hdmi --threshold 0.5\" \"" + url + "\" best --player-fifo")
+        os.system("omxplayer -o hdmi --threshold 0.5 " + url)
+        # os.system("streamlink --player \"omxplayer -o hdmi --threshold 0.5\" \"" + url + "\" best --player-fifo")
     except:
         pass
