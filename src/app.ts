@@ -1,8 +1,13 @@
 import { exec, execSync } from 'child_process';
 import express from 'express';
+import { RedisContext } from './RedisContext';
 
 let port = process.env.PORT || 3000
 let app: express.Application = express()
+let redis = new RedisContext("localhost", 6379)
+
+redis.get("a").then(m => console.log(m))
+redis.set("b", "world")
 
 app.use(express.json());
 app.use(express.static('public'))
