@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "clean": "rimraf -rf bin/",
-    "build": "npm run clean && tsc && cp -r public/ bin/ && cp -r node_modules/ bin/",
-    "start": "npm run build && cd bin && node app.js"
+    "build": "npm run clean && tsc && cp -r sources/ bin/&& cp -r public/ bin/ && cp -r tools/ bin/ && cp -r node_modules/ bin/ ",
+    "build_fast": "npm run clean && tsc && cp -r sources/ bin/ && cd bin && ln -s ../public public && ln -s ../tools tools && ln -s ../node_modules node_modules",
+    "start": "npm run build_fast && cd bin && node app.js",
+    "test_player": "python3 tools/player.py \"https://stream1.1616.ro:1945/look/livestream/chunklist_w2030697325_tkd293emF0b2tlbmVuZHRpbWU9MTYwODQ2NTI5MCZ3b3d6YXRva2VuaGFzaD1NY3pLZ1BTbGs1ZjRBbHJraWhBbkNwcUZqeGxSOUdmR3JNLURKVm5ZMVpVPSZ3b3d6YXRva2Vuc3RhcnR0aW1lPTE2MDg0MjIwOTA=.m3u8\""
   },
   "repository": {
     "type": "git",
@@ -20,7 +22,9 @@
   "homepage": "https://github.com/strelok91/SmartTV#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
+    "child_process": "^1.0.2",
     "express": "^4.17.1",
+    "process": "^0.11.10",
     "rimraf": "^3.0.2",
     "tsc": "^1.20150623.0",
     "typescript": "^4.1.2"

@@ -1,11 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart TV</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
+
 <body>
-    Smart TV app...
+    Smart TV app...<br />
+
+    <a href="#" onclick="stopPlayer()">Stop playing</a>
+
+
+    <ul id="channels">
+    </ul>
 </body>
+
+<script type="text/javascript">
+    function startPlaying(url) {
+        $.ajax({
+            url: "/api/start",
+            type: 'post',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({
+                "url": url
+            }),
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    function stopPlayer() {
+        $.ajax({
+            url: "/api/stop",
+            type: 'post',
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    $(document).ready(() => {
+        $.ajax({
+            url: "/api/getAllChannels",
+            contentType: "application/json;charset=utf-8",
+            type: 'get',
+            success: function (data) {
+                var html = "";
+
+                for (var i = 0; i < data.length; ++i) {
+                    html += `<li><a href="#" onclick="startPlaying('${data[i].url}')">Start ${data[i].name}</a></li>`
+                }
+
+                $("ul#channels").html(html)
+                console.log(data);
+            }
+        });
+    })
+
+
+</script>
+
 </html>
