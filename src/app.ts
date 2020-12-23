@@ -1,13 +1,17 @@
 import { exec, execSync } from 'child_process';
 import express from 'express';
 import { RedisContext } from './RedisContext';
+import { WebSocketManager } from './WebSocketManager';
 
 let port = process.env.PORT || 3000
+let wssPort = 7878
 let app: express.Application = express()
 let redis = new RedisContext("localhost", 6379)
+let wss = new WebSocketManager(wssPort)
+
 
 redis.get("a").then(m => console.log(m))
-redis.set("b", "world")
+redis.setOject("b", { a: 12, b: 15 })
 
 app.use(express.json());
 app.use(express.static('public'))

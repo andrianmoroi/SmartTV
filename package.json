@@ -9,7 +9,9 @@
     "build_fast": "npm run clean && tsc && cd bin && ln -s ../sources sources && ln -s ../public public && ln -s ../tools tools && ln -s ../node_modules node_modules",
     "start": "npm run build_fast && cd bin && node app.js",
     "test_player": "python3 tools/player.py \"https://stream1.1616.ro:1945/look/livestream/chunklist_w2030697325_tkd293emF0b2tlbmVuZHRpbWU9MTYwODQ2NTI5MCZ3b3d6YXRva2VuaGFzaD1NY3pLZ1BTbGs1ZjRBbHJraWhBbkNwcUZqeGxSOUdmR3JNLURKVm5ZMVpVPSZ3b3d6YXRva2Vuc3RhcnR0aW1lPTE2MDg0MjIwOTA=.m3u8\"",
-    "show_service_logs": "journalctl -fu smartv_server.service"
+    "restart_service": "sudo systemctl restart smartv_server.service",
+    "show_service_logs": "journalctl -fu smartv_server.service",
+    "rebuild_raspberry": "npm run build_fast && npm run restart_service && npm run show_service_logs"
   },
   "repository": {
     "type": "git",
