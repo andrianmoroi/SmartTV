@@ -5,26 +5,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartTV</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/qr-code-styling/lib/qr-code-styling.js"></script>
+    <style type="text/css">
+        #status {
+            margin-top: 70px;
+            text-align: center;
+            font-size: 27px;
+        }
+
+        #canvas {
+            margin-top: 200px;
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
-    <div>This is the screen home page</div>
-    <div id="status"></div>
+    <div id="status">Nothing is playing</div>
+    <div id="canvas"></div>
 
     <script type="text/javascript">
-        var ws = new WebSocket("ws://" + document.location.hostname + ":7878")
 
-        ws.onopen = function (e) {
-            // ws.send("working")
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            $("#status").text(msg);
         }
 
-        ws.onmessage = function (event) {
-            console.log(event.data)
 
-            $("#status").text(event.data)
+        generateQRCode();
+        initWebSocket();
+
+        function generateQRCode() {
+            $.ajax({
+                url: "/api/getHostName",
+                type: 'get',
+                contentType: "application/json;charset=utf-8",
+                success: function (data) {
+                    data = data.trim();
+                    console.log(data);
+
+                    var qrCode = new QRCodeStyling({
+                        data: "http://" + data,
+                        width: 300,
+                        height: 300
+                    });
+
+                    qrCode.append(document.getElementById("canvas"));
+                }
+            });
         }
 
+        function initWebSocket() {
+
+            var ws = new WebSocket("ws://" + document.location.hostname + ":7878")
+
+            ws.onmessage = function (event) {
+                console.log(event.data)
+
+                $("#status").text(event.data)
+            }
+        }
     </script>
 </body>
 

@@ -20,6 +20,25 @@ app.get("/api/getAllChannels", (req, res) => {
     res.sendFile(`${process.cwd()}/sources/channels.json`)
 })
 
+app.get("/api/getHostName", (req, res) => {
+    
+    try {
+        exec("hostname -I", (error, response) => {
+            if(error)
+            {
+                console.log(error);
+                res.sendStatus(500)
+            }
+
+            res.send(response)
+        })
+    }
+    catch (e) {
+        console.log(e);
+        res.sendStatus(500)
+    }
+})
+
 app.post("/api/start", (req, res) => {
     stopPlayingVideo();
 
