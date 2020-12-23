@@ -16,10 +16,6 @@ redis.setOject("b", { a: 12, b: 15 })
 app.use(express.json());
 app.use(express.static('public'))
 
-app.get("/api/test", (req, res) => {
-    res.send("Hello world")
-})
-
 app.get("/api/getAllChannels", (req, res) => {
     res.sendFile(`${process.cwd()}/sources/channels.json`)
 })
@@ -27,6 +23,7 @@ app.get("/api/getAllChannels", (req, res) => {
 app.post("/api/start", (req, res) => {
     stopPlayingVideo();
 
+    let name = req.body.name;
     let url = req.body.url;
     let runCommand = `python3 tools/player.py \"${url}\"`;
 
@@ -35,6 +32,8 @@ app.post("/api/start", (req, res) => {
             console.log(error);
             console.log(response);
         })
+
+        wss.sendMessage(`Now is playng ${name}...`)
     }
     catch (e) {
         console.log(e);
@@ -45,6 +44,8 @@ app.post("/api/start", (req, res) => {
 
 app.post("/api/stop", (req, res) => {
     stopPlayingVideo();
+
+    wss.sendMessage(`Nothing is playing now...`)
 
     res.sendStatus(200)
 })

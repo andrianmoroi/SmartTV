@@ -4,18 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>SmartTV</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
-    This is the screen home page
+    <div>This is the screen home page</div>
+    <div id="status"></div>
 
     <script type="text/javascript">
-        var ws = new WebSocket("ws://localhost:7878")
+        var ws = new WebSocket("ws://" + document.location.hostname + ":7878")
 
         ws.onopen = function (e) {
-            ws.send("working")
+            // ws.send("working")
         }
+
+        ws.onmessage = function (event) {
+            console.log(event.data)
+
+            $("#status").text(event.data)
+        }
+
     </script>
 </body>
 

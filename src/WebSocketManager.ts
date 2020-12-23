@@ -4,7 +4,7 @@ export class WebSocketManager {
 
   private wss: Server
 
-  public constructor(private port: number) {
+  public constructor(port: number) {
     this.wss = new Server({ port })
 
     this.wss.on('connection', ws => {
@@ -28,7 +28,7 @@ export class WebSocketManager {
 
   public sendMessage(message: string) {
     this.wss.clients.forEach(client => {
-      if (client.readyState === WebSocket.OPEN) {
+      if ((client as any).isAlive) {
         client.send(message);
       }
     });
