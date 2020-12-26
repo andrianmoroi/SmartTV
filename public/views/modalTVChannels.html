@@ -1,0 +1,51 @@
+<!-- Modal TV channels -->
+<div class="modal fade" id="tvChannels" tabindex="-1" role="dialog" aria-labelledby="tvChannelsTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tvChannelsTitle">TV channels</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h6>Select which channel to play:</h6>
+
+                <ul id="channels"></ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    registerTVChannelsModal()
+
+    function registerTVChannelsModal() {
+        $('#tvChannels').on('show.bs.modal', function (event) {
+            var modal = $(this)
+
+            $.ajax({
+                url: "/api/getAllChannels",
+                contentType: "application/json;charset=utf-8",
+                type: 'get',
+                success: function (data) {
+                    var html = "";
+
+                    for (var i = 0; i < data.length; ++i) {
+                        var name = data[i].name
+                        var url = data[i].url
+
+                        html += `<div class="row" style="margin-top: 5px;"> <button type="button" onclick="startPlaying('${name}', '${url}')" class="btn btn-success btn-lg" data-dismiss="modal">Play ${name}</button> </div>`
+                    }
+
+                    modal.find("ul#channels").html(html)
+                }
+            });
+        })
+    }
+</script>

@@ -20,12 +20,15 @@ app.get("/api/getAllChannels", (req, res) => {
     res.sendFile(`${process.cwd()}/sources/channels.json`)
 })
 
+app.get("/api/getRelaxingVideos", (req, res) => {
+    res.sendFile(`${process.cwd()}/sources/relaxing_videos.json`)
+})
+
 app.get("/api/getHostName", (req, res) => {
-    
+
     try {
         exec("hostname -I", (error, response) => {
-            if(error)
-            {
+            if (error) {
                 console.log(error);
                 res.sendStatus(500)
             }
@@ -52,7 +55,48 @@ app.post("/api/start", (req, res) => {
             console.log(response);
         })
 
-        wss.sendMessage(`Now is playng ${name}...`)
+        wss.sendMessage(`Now is playing ${name}...`)
+    }
+    catch (e) {
+        console.log(e);
+    }
+
+    res.sendStatus(200)
+})
+
+app.post("/api/startLoop", (req, res) => {
+    stopPlayingVideo();
+
+    let name = req.body.name;
+    let url = req.body.url;
+    let runCommand = `python3 tools/player_loop.py \"${url}\"`;
+
+    try {
+
+        console.log("before playing")
+        let p = exec(runCommand, (error, response) => {
+            console.log(error);
+            console.log(response);
+        });
+
+        if(p && p.stdout && p.stderr)
+        {
+            p.stdout.on('data', function (data) {
+                console.log('stdout: ' + data.toString());
+            });
+    
+            p.stderr.on('data', function (data) {
+                console.log('stderr: ' + data.toString());
+            });
+        }
+    
+        p.on('exit', function (code) {
+            console.log('child process exited with code ' + (code || -10000).toString());
+        });
+
+        console.log("after playing")
+
+        wss.sendMessage(`Now is playing ${name}...`)
     }
     catch (e) {
         console.log(e);
@@ -74,7 +118,7 @@ app.listen(port, () => {
 })
 
 function stopPlayingVideo() {
-    let pidsToStop = "ps -aux | egrep \"[t]ools/player\.py|[s]treamlink|[o]mxplayer\" | grep -Po \"^[a-zA-Z0-9]+ *?\\d+\" | grep -Po \"\\d+\" | xargs --no-run-if-empty kill";
+    let pidsToStop = "ps -aux | egrep \"[t]ools/player\.py|[t]ools/player_loop\.py|[s]treamlink|[o]mxplayer\" | grep -Po \"^[a-zA-Z0-9]+ *?\\d+\" | grep -Po \"\\d+\" | xargs --no-run-if-empty kill";
 
     try {
         execSync(pidsToStop)

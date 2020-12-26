@@ -1,0 +1,10 @@
+[
+    {
+        "name": "fireplace",
+        "url": "/home/pi/smart_tv_videos/fireplace.mp4"
+    },
+    {
+        "name": "cascade",
+        "url": "/home/pi/smart_tv_videos/cascade.mp4"
+    }
+]

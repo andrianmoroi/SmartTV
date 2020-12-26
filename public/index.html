@@ -1,78 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart TV</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+    integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+  <script src="https://kit.fontawesome.com/e9b1936473.js" crossorigin="anonymous"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+    crossorigin="anonymous"></script>
+
+  <title>Commander</title>
 </head>
 
 <body>
-    Smart TV app...<br />
+  <div class="container-fluid">
+    <h2 style="text-align: center;"><i>Nothing is playing now...</i></h2>
 
-    <div id="status"></div>
-    <a href="#" onclick="stopPlayer()">Stop playing</a>
+    <div class="row" style="max-width:400px; margin: 30px auto;">
+      <div class="col-2" style="text-align: center;">
+        <button class="btn btn-danger"><i class="fas fa-power-off"></i></button>
+      </div>
+      <div class="col-6" style="text-align: center;">
+        <button class="btn btn-primary"><i class="fas fa-play"></i></button>
+        <button class="btn btn-primary"><i class="fas fa-pause"></i></button>
+        <button class="btn btn-primary" onclick="stopPlayer()"><i class="fas fa-stop"></i></button>
+      </div>
+      <div class="col-4" style="text-align: center;">
+        <button class="btn btn-success"><i class="fas fa-volume-mute"></i></button>
+        <button class="btn btn-success"><i class="fas fa-volume-up"></i></button>
+      </div>
+    </div>
 
+    <div class="row" style="max-width: 400px;margin: 150px auto 0 auto;">
+      <div class="col-6">
+        <button class="btn btn-primary btn-lg" type="button" data-toggle="modal" data-target="#tvChannels"
+          data-whatever="tvChannels"> <i class="fas fa-tv"></i> Play tv channels</button>
+      </div>
+      <div class="col-6">
+        <button class="btn btn-primary btn-lg" type="button" data-toggle="modal" data-target="#relaxingVideos"
+          data-whatever="relaxingVideos"> <i class="fas fa-couch"></i> Play relaxing video</button>
+      </div>
+    </div>
+    <div class="row" style="max-width: 400px;margin: 30px auto;">
+      <div class="col-6">
+        <button class="btn btn-primary btn-lg" type="button"> <i class="fab fa-youtube"></i> Play youtube</button>
+      </div>
+      <div class="col-6">
+        <button class="btn btn-primary btn-lg" type="button" data-toggle="modal" data-target="#streamLink"
+          data-whatever="streamLink"> <i class="fas fa-stream"></i> Play stream link</button>
+      </div>
+    </div>
+  </div>
+  
+  <div data-include="commonFunctions"></div>
+  <div data-include="modalTVChannels"></div>
+  <div data-include="relaxingVideos"></div>
+  <div data-include="streamLink"></div>
 
-    <ul id="channels">
-    </ul>
+  <script>
+    $(function(){
+      var includes = $('[data-include]');
+      jQuery.each(includes, function(){
+        var file = 'views/' + $(this).data('include') + '.html';
+        $(this).load(file);
+      });
+    });
+  </script>
+
 </body>
-
-<script type="text/javascript">
-
-    var ws = new WebSocket("ws://" + document.location.hostname + ":7878")
-    ws.onmessage = function (event) {
-        console.log(event.data)
-
-        $("#status").text(event.data)
-    }
-
-    function startPlaying(name, url) {
-        $.ajax({
-            url: "/api/start",
-            type: 'post',
-            contentType: "application/json;charset=utf-8",
-            data: JSON.stringify({
-                "name": name,
-                "url": url
-            }),
-            success: function (data) {
-                console.log(data);
-            }
-        });
-    }
-
-    function stopPlayer() {
-        $.ajax({
-            url: "/api/stop",
-            type: 'post',
-            contentType: "application/json;charset=utf-8",
-            success: function (data) {
-                console.log(data);
-            }
-        });
-    }
-
-    $(document).ready(() => {
-        $.ajax({
-            url: "/api/getAllChannels",
-            contentType: "application/json;charset=utf-8",
-            type: 'get',
-            success: function (data) {
-                var html = "";
-
-                for (var i = 0; i < data.length; ++i) {
-                    html += `<li><a href="#" onclick="startPlaying('${data[i].name}', '${data[i].url}')">Start ${data[i].name}</a></li>`
-                }
-
-                $("ul#channels").html(html)
-                console.log(data);
-            }
-        });
-    })
-
-
-</script>
 
 </html>

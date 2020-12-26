@@ -1,0 +1,44 @@
+<script>
+
+    function startPlaying(name, url) {
+        $.ajax({
+            url: "/api/start",
+            type: 'post',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({
+                "name": name,
+                "url": url
+            }),
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    function startPlayingLoop(name, url) {
+        $.ajax({
+            url: "/api/startLoop",
+            type: 'post',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({
+                "name": name,
+                "url": url
+            }),
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    function stopPlayer() {
+        $.ajax({
+            url: "/api/stop",
+            type: 'post',
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
+    
+</script>
