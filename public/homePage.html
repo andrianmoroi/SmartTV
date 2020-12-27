@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartTV</title>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/qr-code-styling/lib/qr-code-styling.js"></script>
+    <script type="text/javascript" src="/libs/jquery.min.js"></script>
+    <script type="text/javascript" src="/libs/qr-code-styling.js"></script>
     <style type="text/css">
         #status {
             margin-top: 70px;
@@ -31,7 +31,6 @@
             $("#status").text(msg);
         }
 
-
         generateQRCode();
         initWebSocket();
 
@@ -42,8 +41,7 @@
                 contentType: "application/json;charset=utf-8",
                 success: function (data) {
                     data = data.trim();
-                    console.log(data);
-
+                    
                     var qrCode = new QRCodeStyling({
                         data: "http://" + data,
                         width: 300,
