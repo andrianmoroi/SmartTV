@@ -1,0 +1,33 @@
+export class PlayerDBus {
+    instance: number;
+    quit(cb: any): Promise<any>;
+    next(cb: any): Promise<any>;
+    previous(cb: any): Promise<any>;
+    play(cb: any): Promise<any>;
+    pause(cb: any): Promise<any>;
+    togglePlay(cb: any): Promise<any>;
+    stop(cb: any): Promise<any>;
+    seek(seconds: any, cb: any): Promise<number>;
+    setPosition(seconds: any, cb: any): Promise<number>;
+    mute(cb: any): Promise<any>;
+    unmute(cb: any): Promise<any>;
+    getCanSeek(cb: any): Promise<any>;
+    getCanPlay(cb: any): Promise<any>;
+    getCanPause(cb: any): Promise<any>;
+    getPlaybackStatus(cb: any): Promise<any>;
+    getPlaying(cb: any): Promise<boolean>;
+    getPaused(cb: any): Promise<boolean>;
+    getVolume(cb: any): Promise<any>;
+    setVolume(volume: any, cb: any): Promise<any>;
+    getPosition(cb: any): Promise<number>;
+    getDuration(cb: any): Promise<number>;
+    getResWidth(cb: any): Promise<any>;
+    getResHeight(cb: any): Promise<any>;
+    setAlpha(alpha: any, cb: any): Promise<any>;
+    setVideoPos(x1: any, y1: any, x2: any, y2: any, cb: any): Promise<any>;
+    setVideoCropPos(x1: any, y1: any, x2: any, y2: any, cb: any): Promise<any>;
+    setAspectMode(mode: any, cb: any): Promise<any>;
+    _getDBus(): Promise<any>;
+    dbus: any;
+    _invokeDBus(member: any, iface: any, signature: any, body: any, cb: any): Promise<any>;
+}

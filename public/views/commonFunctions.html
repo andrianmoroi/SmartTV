@@ -40,5 +40,38 @@
             }
         });
     }
-    
+
+    function togglePlayPlayer() {
+        $.ajax({
+            url: "/api/togglePlay",
+            type: 'post',
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    function mutePlayer() {
+        $.ajax({
+            url: "/api/mute",
+            type: 'post',
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+    function unmutePlayer() {
+        $.ajax({
+            url: "/api/unmute",
+            type: 'post',
+            contentType: "application/json;charset=utf-8",
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
 </script>
