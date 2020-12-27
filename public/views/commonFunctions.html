@@ -2,7 +2,7 @@
 
     function startPlaying(name, url) {
         $.ajax({
-            url: "/api/start",
+            url: "/api/play",
             type: 'post',
             contentType: "application/json;charset=utf-8",
             data: JSON.stringify({
@@ -17,7 +17,7 @@
 
     function startPlayingLoop(name, url) {
         $.ajax({
-            url: "/api/startLoop",
+            url: "/api/playLoop",
             type: 'post',
             contentType: "application/json;charset=utf-8",
             data: JSON.stringify({

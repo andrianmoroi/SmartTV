@@ -2,13 +2,14 @@ import { exec, execSync } from 'child_process';
 import express from 'express';
 import { RedisContext } from './RedisContext';
 import { WebSocketManager } from './WebSocketManager';
+import { PlayerManager } from './PlayerManager';
 
 let port = process.env.PORT || 3000
 let wssPort = 7878
 let app: express.Application = express()
 let redis = new RedisContext("localhost", 6379)
 let wss = new WebSocketManager(wssPort)
-
+let playerManager = new PlayerManager()
 
 redis.get("a").then(m => console.log(m))
 redis.setOject("b", { a: 12, b: 15 })
@@ -42,71 +43,29 @@ app.get("/api/getHostName", (req, res) => {
     }
 })
 
-app.post("/api/start", (req, res) => {
-    stopPlayingVideo();
+app.post("/api/play", (req, res) => {
 
     let name = req.body.name;
     let url = req.body.url;
-    let runCommand = `python3 tools/player.py \"${url}\"`;
 
-    try {
-        exec(runCommand, (error, response) => {
-            console.log(error);
-            console.log(response);
-        })
+    var play = playerManager.play(url)
 
-        wss.sendMessage(`Now is playing ${name}...`)
-    }
-    catch (e) {
-        console.log(e);
-    }
-
-    res.sendStatus(200)
+    res.sendStatus(play ? 200 : 500)
 })
 
-app.post("/api/startLoop", (req, res) => {
-    stopPlayingVideo();
+app.post("/api/playLoop", (req, res) => {
 
     let name = req.body.name;
     let url = req.body.url;
-    let runCommand = `python3 tools/player_loop.py \"${url}\"`;
 
-    try {
+    var play = playerManager.play(url)
 
-        console.log("before playing")
-        let p = exec(runCommand, (error, response) => {
-            console.log(error);
-            console.log(response);
-        });
-
-        if(p && p.stdout && p.stderr)
-        {
-            p.stdout.on('data', function (data) {
-                console.log('stdout: ' + data.toString());
-            });
-    
-            p.stderr.on('data', function (data) {
-                console.log('stderr: ' + data.toString());
-            });
-        }
-    
-        p.on('exit', function (code) {
-            console.log('child process exited with code ' + (code || -10000).toString());
-        });
-
-        console.log("after playing")
-
-        wss.sendMessage(`Now is playing ${name}...`)
-    }
-    catch (e) {
-        console.log(e);
-    }
-
-    res.sendStatus(200)
+    res.sendStatus(play ? 200 : 500)
 })
 
 app.post("/api/stop", (req, res) => {
-    stopPlayingVideo();
+
+    playerManager.stopPlayingVideo()
 
     wss.sendMessage(`Nothing is playing now...`)
 
@@ -116,16 +75,3 @@ app.post("/api/stop", (req, res) => {
 app.listen(port, () => {
     console.log("listen to port " + port)
 })
-
-function stopPlayingVideo() {
-    let pidsToStop = "ps -aux | egrep \"[t]ools/player\.py|[t]ools/player_loop\.py|[s]treamlink|[o]mxplayer\" | grep -Po \"^[a-zA-Z0-9]+ *?\\d+\" | grep -Po \"\\d+\" | xargs --no-run-if-empty kill";
-
-    try {
-        execSync(pidsToStop)
-    }
-    catch (e) {
-        console.log(e)
-    }
-
-    console.log('stop playing')
-}
