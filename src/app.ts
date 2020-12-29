@@ -111,6 +111,12 @@ app.post("/api/stop", (req, res) => {
     res.sendStatus(200)
 })
 
+app.post("/api/restart", (req, res) => {
+    exec("sudo reboot", (req, res) => { })
+
+    res.sendStatus(200)
+})
+
 app.listen(port, () => {
     console.log("listen to port " + port)
 })

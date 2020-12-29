@@ -1,5 +1,21 @@
 <script>
 
+    function restart(name, url) {
+        $.ajax({
+            url: "/api/restart",
+            type: 'post',
+            contentType: "application/json;charset=utf-8",
+            data: JSON.stringify({
+                "name": name,
+                "url": url
+            }),
+            success: function (data) {
+                console.log(data);
+            }
+        });
+    }
+
+
     function startPlaying(name, url) {
         $.ajax({
             url: "/api/play",
