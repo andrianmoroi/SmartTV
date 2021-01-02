@@ -22,10 +22,12 @@
 </head>
 
 <body>
-    <div id="status">Nothing is playing</div>
+    <div id="status"></div>
     <div id="canvas"></div>
 
     <script type="text/javascript">
+
+        $("#status").text("Nothing is playing now")
 
         window.onerror = function (msg, url, lineNo, columnNo, error) {
             $("#status").text(msg);
@@ -41,7 +43,7 @@
                 contentType: "application/json;charset=utf-8",
                 success: function (data) {
                     data = data.trim();
-                    
+
                     var qrCode = new QRCodeStyling({
                         data: "http://" + data,
                         width: 300,
@@ -60,7 +62,17 @@
             ws.onmessage = function (event) {
                 console.log(event.data)
 
-                $("#status").text(event.data)
+                var status = JSON.parse(event.data);
+
+                if (status && status.action) {
+                    if (status.action == "play" && status.name) {
+                        $("#status").text("Now is playing " + status.name)
+                    }
+                    else if (status.action == "stop") {
+                        $("#status").text("Nothing is playing now")
+                    }
+
+                }
             }
         }
     </script>

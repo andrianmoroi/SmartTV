@@ -21,14 +21,15 @@
 
 <body>
   <div class="container-fluid">
-    <h2 style="text-align: center;"><i>Nothing is playing now...</i></h2>
+    <h2 style="text-align: center;" id="status"><i>Nothing is playing now...</i></h2>
 
     <div class="row" style="max-width:400px; margin: 30px auto;">
       <div class="col-2" style="text-align: center;">
         <button class="btn btn-danger" onclick="restart()"><i class="fas fa-power-off"></i></button>
       </div>
       <div class="col-6" style="text-align: center;">
-        <button class="btn btn-primary" onclick="togglePlayPlayer()"><i class="fas fa-play"></i> / <i class="fas fa-pause"></i></button>
+        <button class="btn btn-primary" onclick="togglePlayPlayer()"><i class="fas fa-play"></i> / <i
+            class="fas fa-pause"></i></button>
         <button class="btn btn-primary" onclick="stopPlayer()"><i class="fas fa-stop"></i></button>
       </div>
       <div class="col-4" style="text-align: center;">
@@ -57,20 +58,45 @@
       </div>
     </div>
   </div>
-  
+
   <div data-include="commonFunctions"></div>
   <div data-include="modalTVChannels"></div>
   <div data-include="relaxingVideos"></div>
   <div data-include="streamLink"></div>
 
   <script>
-    $(function(){
+    initWebSocket();
+
+    $(function () {
       var includes = $('[data-include]');
-      jQuery.each(includes, function(){
+      jQuery.each(includes, function () {
         var file = 'views/' + $(this).data('include') + '.html';
         $(this).load(file);
       });
     });
+
+
+    function initWebSocket() {
+
+      $("#status").text("Nothing is playing now")
+      var ws = new WebSocket("ws://" + document.location.hostname + ":7878")
+
+      ws.onmessage = function (event) {
+        console.log(event.data)
+
+        var status = JSON.parse(event.data);
+
+        if (status && status.action) {
+          if (status.action == "play" && status.name) {
+            $("#status").text("Now is playing " + status.name)
+          }
+          else if (status.action == "stop") {
+            $("#status").text("Nothing is playing now")
+          }
+
+        }
+      }
+    }
   </script>
 
 </body>

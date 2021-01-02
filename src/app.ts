@@ -89,6 +89,8 @@ app.post("/api/play", (req, res) => {
 
     var play = playerManager.play(url)
 
+    wss.sendMessage(JSON.stringify({ action: "play", name: name }))
+
     res.sendStatus(play ? 200 : 500)
 })
 
@@ -99,6 +101,8 @@ app.post("/api/playLoop", (req, res) => {
 
     var play = playerManager.play(url)
 
+    wss.sendMessage(JSON.stringify({ action: "play", name: name }))
+
     res.sendStatus(play ? 200 : 500)
 })
 
@@ -106,7 +110,7 @@ app.post("/api/stop", (req, res) => {
 
     playerManager.stopPlayingVideo()
 
-    wss.sendMessage(`Nothing is playing now...`)
+    wss.sendMessage(JSON.stringify({ action: "stop" }))
 
     res.sendStatus(200)
 })
